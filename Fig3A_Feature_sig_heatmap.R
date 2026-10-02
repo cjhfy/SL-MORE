@@ -47,7 +47,7 @@ colnames(mat_raw) <- all_features
 high_conf_sl_counts <- numeric(length(cancers))
 names(high_conf_sl_counts) <- cancers
 
-cat("\n>>> 开始数据聚合...\n")
+cat("\n>>> Starting data aggregation...\n")
 # ─────────────────────────────────────────────
 # 3. Read the parquet file and compute statistics
 # ─────────────────────────────────────────────

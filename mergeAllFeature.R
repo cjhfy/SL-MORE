@@ -102,7 +102,7 @@ protein_coding_ids <- sort(unique(gene_anno[
   `#tax_id` == 9606 & type_of_gene == "protein-coding",
   as.integer(GeneID)
 ]))
-cat(sprintf("提取到人类蛋白质编码基因: %d 个\n", length(protein_coding_ids)))
+cat(sprintf("Extracted %d human protein-coding genes\n", length(protein_coding_ids)))
 rm(gene_anno)
 gc()
 
@@ -162,7 +162,7 @@ optimized_write_parquet <- function(dt, file_path) {
 # ─────────────────────────────────────────────
 # 3. Process the pan-cancer features (streaming version)
 # ─────────────────────────────────────────────
-cat("\n>>> [步骤 1] 构建泛癌种共享特征库 (流式计算中...) <<<\n")
+cat("\n>>> [Step 1] Building the pan-cancer shared feature atlas (streaming...) <<<\n")
 
 pan_configs <- list(
   list(path = crispr_path_map$Exp_Inact_CR_Dep, var = "mRNAEssCrispr", parser = function(obj) parse_crispr(obj, "Exp_Low_CR_Dep", is_pval = TRUE)),
@@ -231,17 +231,17 @@ pan_configs <- list(
 
 PanCancer_Shared_Matrix <- build_features_streaming(pan_configs, protein_coding_ids)
 optimized_write_parquet(PanCancer_Shared_Matrix, file.path(pan_out_dir, "PanCancer_Shared_Features.parquet"))
-cat(sprintf("泛癌种特征保存成功，共 %d 行。\n", nrow(PanCancer_Shared_Matrix)))
+cat(sprintf("Pan-cancer features saved successfully, %d rows in total.\n", nrow(PanCancer_Shared_Matrix)))
 rm(PanCancer_Shared_Matrix, pan_configs)
 gc()
 
 # ─────────────────────────────────────────────────────────────
 # 4. Loop over the 32 cancer types sequentially
 # ─────────────────────────────────────────────────────────────
-cat("\n>>> [步骤 2] 批量构建癌种特异性特征库 (顺序处理中...) <<<\n")
+cat("\n>>> [Step 2] Building cancer-specific feature atlases (sequential...) <<<\n")
 
 for (cancer in cancers) {
-  cat(sprintf("\n[开始处理] %s ...\n", cancer))
+  cat(sprintf("\n[Processing] %s ...\n", cancer))
 
   spec_configs <- list(
     list(path = paste0(base_paths$DiffExp_dir, "TCGA-", cancer, ".RData"), var = "diffExp_p", parser = function(obj) {
@@ -293,13 +293,13 @@ for (cancer in cancers) {
       Cancer_Spec_Matrix,
       file.path(spec_out_dir, paste0(cancer, "_Specific_Features.parquet"))
     )
-    cat(sprintf("[完成] %s | 行数: %d\n", cancer, nrow(Cancer_Spec_Matrix)))
+    cat(sprintf("[Done] %s | rows: %d\n", cancer, nrow(Cancer_Spec_Matrix)))
   } else {
-    cat(sprintf("[警告] %s 未能生成特征矩阵\n", cancer))
+    cat(sprintf("[Warning] %s did not produce a feature matrix\n", cancer))
   }
 
   rm(spec_configs, Cancer_Spec_Matrix)
   gc()
 }
 
-cat("\n所有特征顺序处理与保存完毕！\n")
+cat("\nAll features processed and saved.\n")

@@ -81,107 +81,107 @@ colnames(SlFeatures) <- FeatureNames
 
 # Load and process each feature type
 # 1. DiffSof
-cat("    -> 正在加载 DiffSof 特征数据...\n")
+cat("    -> Loading DiffSof features...\n")
 load(paste0(base_paths$sof_dir, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(names(SCNV_diff_p), sl_list)
 SlFeatures[sl_intersect, "DiffSof"] <- SCNV_diff_p[sl_intersect]
-cat(sprintf("       已匹配 %d 个基因对的 DiffSof 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched DiffSof data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(SCNV_diff_p)
 gc()
 
 # 2. DiffExp
-cat("    -> 正在加载 DiffExp 特征数据...\n")
+cat("    -> Loading DiffExp features...\n")
 load(paste0(base_paths$DiffExp_dir, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(names(diffExp_p), sl_list)
 SlFeatures[sl_intersect, "DiffExp"] <- diffExp_p[sl_intersect]
-cat(sprintf("       已匹配 %d 个基因对的 DiffExp 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched DiffExp data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(diffExp_p)
 gc()
 
 # 3. ExcluISLE
-cat("    -> 正在加载 ExcluISLE 特征数据...\n")
+cat("    -> Loading ExcluISLE features...\n")
 load(paste0(base_paths$dir_ExcluISLE, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(rownames(mutexISLE), sl_list)
 SlFeatures[sl_intersect, c("ExcluISLEmRNA", "ExcluISLECNV")] <- mutexISLE[sl_intersect, ]
-cat(sprintf("       已匹配 %d 个基因对的 ExcluISLE 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched ExcluISLE data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(mutexISLE)
 gc()
 
 # 4. ExcluCNVdel
-cat("    -> 正在加载 ExcluCNVdel 特征数据...\n")
+cat("    -> Loading ExcluCNVdel features...\n")
 load(paste0(base_paths$dir_ExcluCNVdel, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(names(scnaDel_res), sl_list)
 SlFeatures[sl_intersect, "ExcluCNVdel"] <- scnaDel_res[sl_intersect]
-cat(sprintf("       已匹配 %d 个基因对的 ExcluCNVdel 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched ExcluCNVdel data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(scnaDel_res)
 gc()
 
 # 5. ExcluMut
-cat("    -> 正在加载 ExcluMut 特征数据...\n")
+cat("    -> Loading ExcluMut features...\n")
 load(paste0(base_paths$dir_ExcluMut, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(names(mut_res), sl_list)
 SlFeatures[sl_intersect, "ExcluMut"] <- mut_res[sl_intersect]
-cat(sprintf("       已匹配 %d 个基因对的 ExcluMut 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched ExcluMut data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(mut_res)
 gc()
 
 # 6. ExcluAlt
-cat("    -> 正在加载 ExcluAlt 特征数据...\n")
+cat("    -> Loading ExcluAlt features...\n")
 load(paste0(base_paths$dir_ExcluAlt, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(names(scnaAlt), sl_list)
 SlFeatures[sl_intersect, "ExcluAlt"] <- scnaAlt[sl_intersect]
-cat(sprintf("       已匹配 %d 个基因对的 ExcluAlt 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched ExcluAlt data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(scnaAlt)
 gc()
 
 # 7. Survival features (SiLi mRNA)
-cat("    -> 正在加载 SILI 特征数据...\n")
+cat("    -> Loading SILI features...\n")
 load(paste0(base_paths$dir_sili, cancer, "/", cancer, "_final.RData"))
 sl_intersect <- intersect(rownames(final_results), sl_list)
 SlFeatures[sl_intersect, c("SurvSILI_p", "SurvSILI_HR")] <- final_results[sl_intersect, c("P_value", "HR")]
-cat(sprintf("       已匹配 %d 个基因对的 SILI 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched SILI data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(final_results)
 gc()
 
 # 8. Survival features (ISLE SCNA)
-cat("    -> 正在加载 ISLESCNA 特征数据...\n")
+cat("    -> Loading ISLESCNA features...\n")
 load(paste0(base_paths$dir_ISLESCNA, cancer, "/", cancer, "_final.RData"))
 sl_intersect <- intersect(rownames(final_results), sl_list)
 SlFeatures[sl_intersect, c("SurvISLECNV_p", "SurvISLECNV_HR")] <- final_results[sl_intersect, c("P_value", "HR")]
-cat(sprintf("       已匹配 %d 个基因对的 ISLESCNA 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched ISLESCNA data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(final_results)
 gc()
 
 # 9. Survival features (ISLE mRNA)
-cat("    -> 正在加载 ISLEmRNA 特征数据...\n")
+cat("    -> Loading ISLEmRNA features...\n")
 load(paste0(base_paths$dir_ISLEmRNA, cancer, "/", cancer, "_final.RData"))
 sl_intersect <- intersect(rownames(final_results), sl_list)
 SlFeatures[sl_intersect, c("SurvISLEmRNA_p", "SurvISLEmRNA_HR")] <- final_results[sl_intersect, c("P_value", "HR")]
-cat(sprintf("       已匹配 %d 个基因对的 ISLEmRNA 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched ISLEmRNA data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(final_results)
 gc()
 
 # 10. Co-expression
-cat("    -> 正在加载 Co-expression 特征数据...\n")
+cat("    -> Loading Co-expression features...\n")
 load(paste0(base_paths$dir_coExp, "TCGA-", cancer, ".RData"))
 sl_intersect <- intersect(rownames(co_EXP_p), sl_list)
 SlFeatures[sl_intersect, c("coExp_p", "coExp_r")] <- co_EXP_p[sl_intersect, ]
-cat(sprintf("       已匹配 %d 个基因对的 Co-expression 数据\n", length(sl_intersect)))
+cat(sprintf("       Matched Co-expression data for %d gene pairs\n", length(sl_intersect)))
 # Free memory
 rm(co_EXP_p)
 gc()
 
 ### Gene knockout features (also pan-cancer; no per-cancer edits needed)
-cat("    -> 正在加载 CRISPR/RNAi 特征数据...\n")
+cat("    -> Loading CRISPR/RNAi features...\n")
 load("/data/home/chenjiahao/nuaa/synlethDB/project_source/features/CRISPR/DAISY/pancancer.RData")
 load("/data/home/chenjiahao/nuaa/synlethDB/project_source/features/CRISPR/ISLE_mRNA1/Pancancer.RData")
 load("/data/home/chenjiahao/nuaa/synlethDB/project_source/features/CRISPR/ISLE_SCNA1/Pancancer.RData")
@@ -236,7 +236,7 @@ SlFeatures[sl_intersect, "scnaEssRNAiDaisy"] <- scnaEssRNAiDaisy[sl_intersect, 3
 
 ### Pancancer_feature (also pan-cancer; no per-cancer edits needed)
 # 1. Complex_10
-cat("    -> 正在加载 Pancancer 特征数据...\n")
+cat("    -> Loading Pancancer features...\n")
 load("/data/home/chenjiahao/nuaa/synlethDB/project_source/features/TCGA01/Complex_10.RData")
 sl_intersect <- intersect(rownames(Complex_10), sl_list)
 SlFeatures[sl_intersect, "Complex_10"] <- Complex_10[sl_intersect, 3]
@@ -344,6 +344,6 @@ SlFeatures[sl_not_in_proteinInt, "proteinInt"] <- 0
 rm(proteinInt)
 gc()
 
-cat("    -> 正在对特征数据进行数值格式化...\n")
+cat("    -> Applying numeric formatting to features...\n")
 SlFeatures <- round(SlFeatures, digits = 4)
 save(SlFeatures, file = paste0("/data/home/chenjiahao/nuaa/synlethDB/FeatureMatrix/", cancer, "_SL_Matrix.RData"))

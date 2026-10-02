@@ -37,7 +37,7 @@ if (!dir.exists(stat_out_dir)) dir.create(stat_out_dir, recursive = TRUE)
 # ─────────────────────────────────────────────
 # 2. Preprocess the pan-cancer features (expensive; run only once)
 # ─────────────────────────────────────────────
-cat("\n>>> 加载并预处理 PanCancer 共享特征 (2亿行级)...\n")
+cat("\n>>> Loading and preprocessing PanCancer shared features (200M rows)...\n")
 pan_file <- file.path(pan_out_dir, "PanCancer_Shared_Features.parquet")
 # Read only the necessary columns to save memory
 pan_dt <- read_parquet(pan_file, as_data_frame = FALSE) %>% as.data.table()
@@ -77,7 +77,7 @@ for (cancer in cancers) {
   spec_file <- file.path(spec_out_dir, paste0(cancer, "_Specific_Features.parquet"))
   if (!file.exists(spec_file)) next
 
-  cat(sprintf("\n>>> 正在处理癌种: %s\n", cancer))
+  cat(sprintf("\n>>> Processing cancer type: %s\n", cancer))
   spec_dt <- read_parquet(spec_file, as_data_frame = FALSE) %>% as.data.table()
 
   # 3.1 Binarize the per-cancer features
@@ -153,7 +153,7 @@ for (cancer in cancers) {
   summary_stats[, Cancer := cancer]
   results_list[[cancer]] <- summary_stats
 
-  cat(sprintf("[%s] 处理完毕。总行数: %d\n", cancer, nrow(dt_merged)))
+  cat(sprintf("[%s] Done. Total rows: %d\n", cancer, nrow(dt_merged)))
 
   rm(spec_dt, dt_merged, all_pairs)
   gc()
@@ -165,7 +165,7 @@ for (cancer in cancers) {
 final_summary <- rbindlist(results_list)
 wide_summary <- dcast(final_summary, Cancer ~ CategoryCount, value.var = "Count", fill = 0)
 fwrite(wide_summary, file.path(stat_out_dir, "All_Cancer_CategoryCount_Summary.csv"))
-cat("\n>>> 所有处理已完成！\n")
+cat("\n>>> All processing finished!\n")
 
 # ─────────────────────────────────────────────
 # 5. Examples of follow-up analysis and filtering

@@ -30,13 +30,13 @@ plot_data <- data.table(
 )
 
 for (cancer in cancers) {
-  cat(sprintf("[正在提取] %s ...\n", cancer))
+  cat(sprintf("[Extracting] %s ...\n", cancer))
 
   file_mut <- paste0(base_paths$mut_dir, "TCGA-", cancer, ".RData")
   file_ExcluMut <- paste0(base_paths$dir_ExcluMut, "TCGA-", cancer, ".RData")
 
   if (!file.exists(file_mut) || !file.exists(file_ExcluMut)) {
-    cat(sprintf("  [跳过] 找不到配对的文件。\n"))
+    cat(sprintf("  [Skip] Paired files not found.\n"))
     next
   }
 
@@ -68,7 +68,7 @@ for (cancer in cancers) {
 }
 
 ### ----------------- 3. Publication-quality dual-axis bar chart -----------------###
-cat("\n[作图] 正在绘制双轴图...\n")
+cat("\n[Plot] Drawing the dual-axis chart...\n")
 
 # Sort the x-axis by total mutated genes, descending
 plot_data <- plot_data[order(-Mut_Genes)]
@@ -114,4 +114,4 @@ p <- ggplot(plot_data, aes(x = Cancer)) +
 fig_output_path <- paste0(base_paths$dir_ExcluMut, "Supplementary_Fig_S1.png")
 ggsave(fig_output_path, plot = p, width = 11, height = 5.5, dpi = 300)
 
-cat(sprintf("[完成] 图表已生成并保存至: %s\n", fig_output_path))
+cat(sprintf("[Done] Figure generated and saved to: %s\n", fig_output_path))

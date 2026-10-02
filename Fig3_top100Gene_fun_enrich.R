@@ -36,13 +36,13 @@ cancers <- c(
 # ─────────────────────────────────────────────
 # 2. Load and filter the gene annotation data
 # ─────────────────────────────────────────────
-cat("\n>>> 正在加载并过滤 Protein-Coding 基因注释...\n")
+cat("\n>>> Loading and filtering protein-coding gene annotations...\n")
 gene_info_path <- "/data/home/chenjiahao/nuaa/synlethDB/gene_info/Homo_sapiens.gene_info"
 gene_anno <- fread(gene_info_path, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 gene_anno <- gene_anno[type_of_gene == "protein-coding", .(GeneID, Symbol, Synonyms)]
 gene_anno[, Synonyms := gsub("\\|", ";", Synonyms)]
 id_to_symbol_map <- setNames(gene_anno$Symbol, as.character(gene_anno$GeneID))
-cat(sprintf("[+] 过滤完成：保留了 %d 个蛋白质编码基因进行映射。\n", nrow(gene_anno)))
+cat(sprintf("[+] Filtering done: kept %d protein-coding genes for mapping.\n", nrow(gene_anno)))
 
 # ─────────────────────────────────────────────
 # 3. Loop over the cancer data
@@ -75,7 +75,7 @@ for (cancer in cancers) {
     counts_list[[cancer]] <- data.table(Cancer = cancer, PairCount = pair_count)
     write_parquet(dt_filtered, file.path(gt4_out_dir, paste0(cancer, "_GT4_Features.parquet")))
     fwrite(gene_sl_counts, file.path(gene_stat_dir, paste0(cancer, "_Gene_SL_Counts.csv")))
-    cat(sprintf("[+] %s 处理完毕 | 编码基因对: %d\n", cancer, pair_count))
+    cat(sprintf("[+] %s done | coding gene pairs: %d\n", cancer, pair_count))
   }
   rm(dt, dt_filtered)
   gc()

@@ -70,7 +70,7 @@ spec_path <- file.path(base_dir, "Cancer_Specific", paste0(cancer_type, "_Specif
 # ─────────────────────────────────────────────
 # 2. Disk-level streaming filter (avoids out-of-memory on the 200M-row merge)
 # ─────────────────────────────────────────────
-cat(">>> 正在执行磁盘级流式过滤...\n")
+cat(">>> Running disk-level streaming filter...\n")
 
 # A. Prepare the filter list
 sl_pairs <- data.table(pair = sl_list) %>%
@@ -93,7 +93,7 @@ matched_spec <- spec_ds %>%
   collect() %>%
   as.data.table()
 
-cat(">>> 正在进行 Key-based 内存合并...\n")
+cat(">>> Running key-based in-memory merge...\n")
 
 # A. Coerce types to avoid int-vs-double match failures
 matched_pan[, `:=`(gene1 = as.integer(gene1), gene2 = as.integer(gene2))]
@@ -108,11 +108,11 @@ setkey(matched_spec, gene1, gene2)
 FeatureMat_raw <- merge(matched_pan, matched_spec, by = c("gene1", "gene2"), all = FALSE)
 
 cat(sprintf(
-  ">>> 合并完成。最终特征矩阵维度: %d 行 x %d 列\n",
+  ">>> Merge complete. Final feature matrix: %d rows x %d columns\n",
   nrow(FeatureMat_raw), ncol(FeatureMat_raw)
 ))
 
-cat(sprintf(">>> 过滤完成。原始行数: ~2亿 | 提取后行数: %d\n", nrow(FeatureMat_raw)))
+cat(sprintf(">>> Filtering complete. Raw rows: ~200M | extracted rows: %d\n", nrow(FeatureMat_raw)))
 
 # ─────────────────────────────────────────────
 # 3. Clean and preprocess the feature matrix
